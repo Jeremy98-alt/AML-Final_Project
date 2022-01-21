@@ -8,6 +8,7 @@ import torch, os
 import sys
 abs_root_dir = '/'.join(os.path.dirname(os.path.realpath(__file__)).split('/')[:-1])
 sys.path.insert(1, os.path.join(abs_root_dir))
+from functions import parse_configuration
 
 #####################################
 
@@ -38,8 +39,9 @@ if __name__ == "__main__":
     else:
         raise NotImplementedError
 
+    backbone_cfg = parse_configuration(cfg)
     net = parsingNet(pretrained = False, backbone=cfg.backbone,cls_dim = (cfg.griding_num+1,cls_num_per_lane, cfg.num_lanes),
-                    use_aux=False).cuda() # we dont need auxiliary segmentation in testing
+                    use_aux=False, backbone_cfg=backbone_cfg).cuda() # we dont need auxiliary segmentation in testing
 
     state_dict = torch.load(cfg.test_model, map_location = 'cpu')['model']
     compatible_state_dict = {}
