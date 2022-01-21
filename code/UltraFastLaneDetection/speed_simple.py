@@ -9,17 +9,22 @@ import os
 import sys
 abs_root_dir = '/'.join(os.path.dirname(os.path.realpath(__file__)).split('/')[:-1])
 sys.path.insert(1, os.path.join(abs_root_dir))
+from functions import parse_configuration
 
 #####################################
 
 import time
 import numpy as np
 from model.model import parsingNet
+from utils.common import merge_config
 
 # torch.backends.cudnn.deterministic = False
 
+args, cfg = merge_config()
+
 torch.backends.cudnn.benchmark = True
-net = parsingNet(pretrained = False, backbone='18',cls_dim = (100+1,56,4),use_aux=False).cuda()
+backbone_cfg = parse_configuration(cfg)
+net = parsingNet(pretrained = False, backbone='38',cls_dim = (100+1,56,4),use_aux=False, backbone_cfg=backbone_cfg).cuda()
 # net = parsingNet(pretrained = False, backbone='18',cls_dim = (200+1,18,4),use_aux=False).cuda()
 
 net.eval()
